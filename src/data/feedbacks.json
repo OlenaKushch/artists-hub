@@ -1,0 +1,29 @@
+[
+  {
+    "name": "Alex",
+    "descr": "Amazing selection of artists – I keep discovering new music every day!",
+    "rating": 5
+  },
+  {
+    "name": "Maria",
+    "descr": "Nice UI and easy filters. It feels like a real streaming app, but focused on discovery.",
+    "rating": 4
+  },
+  {
+    "name": "John",
+    "descr": "Love the artist details and mini‑player. It is super easy to dive into full albums.",
+    "rating": 5
+  },
+  {
+    "name": "Nika",
+    "descr": "The dark theme, typography, and micro‑interactions all look very polished.",
+    "rating": 5
+  },
+  {
+    "name": "Oleh",
+    "descr": "Filters by genre and name work great – I quickly found a bunch of new indie bands.",
+    "rating": 4
+  }
+]
+
+

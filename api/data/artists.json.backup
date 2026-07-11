@@ -1,0 +1,99 @@
+[
+  {
+    "idArtist": 1,
+    "strArtist": "Radiohead",
+    "strArtistThumb": "https://images.pexels.com/photos/164745/pexels-photo-164745.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "strCountry": "United Kingdom",
+    "intMembers": 5,
+    "strGender": "Band",
+    "strBiographyEN": "Radiohead are an English rock band formed in Abingdon, Oxfordshire, in 1985. They are known for their experimental approach to rock music and acclaimed albums such as OK Computer and Kid A.",
+    "strGenre": "Alternative Rock, Art Rock",
+    "intFormedYear": 1985,
+    "intDisbandedYear": null
+  },
+  {
+    "idArtist": 2,
+    "strArtist": "Coldplay",
+    "strArtistThumb": "https://images.pexels.com/photos/2102568/pexels-photo-2102568.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "strCountry": "United Kingdom",
+    "intMembers": 4,
+    "strGender": "Band",
+    "strBiographyEN": "Coldplay are a British rock band formed in London in 1997. Their melodic sound and stadium anthems have made them one of the most successful bands of the 21st century.",
+    "strGenre": "Pop Rock, Alternative Rock",
+    "intFormedYear": 1997,
+    "intDisbandedYear": null
+  },
+  {
+    "idArtist": 3,
+    "strArtist": "Beyoncé",
+    "strArtistThumb": "https://images.pexels.com/photos/164461/pexels-photo-164461.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "strCountry": "United States",
+    "intMembers": 1,
+    "strGender": "Female",
+    "strBiographyEN": "Beyoncé is an American singer, songwriter, and producer. With her powerful vocals and genre‑blending albums, she has become one of the most influential artists in contemporary music.",
+    "strGenre": "R&B, Pop",
+    "intFormedYear": 1981,
+    "intDisbandedYear": null
+  },
+  {
+    "idArtist": 4,
+    "strArtist": "Daft Punk",
+    "strArtistThumb": "https://images.pexels.com/photos/164716/pexels-photo-164716.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "strCountry": "France",
+    "intMembers": 2,
+    "strGender": "Duo",
+    "strBiographyEN": "Daft Punk were a French electronic music duo known for their futuristic sound, robot helmets, and chart‑topping hits like Get Lucky and One More Time.",
+    "strGenre": "Electronic, House",
+    "intFormedYear": 1993,
+    "intDisbandedYear": 2021
+  },
+  {
+    "idArtist": 5,
+    "strArtist": "Billie Eilish",
+    "strArtistThumb": "https://images.pexels.com/photos/167636/pexels-photo-167636.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "strCountry": "United States",
+    "intMembers": 1,
+    "strGender": "Female",
+    "strBiographyEN": "Billie Eilish is an American singer and songwriter known for her intimate vocals, dark pop sound, and Grammy‑winning debut album When We All Fall Asleep, Where Do We Go?.",
+    "strGenre": "Alternative Pop, Electropop",
+    "intFormedYear": 2001,
+    "intDisbandedYear": null
+  },
+  {
+    "idArtist": 6,
+    "strArtist": "The Weeknd",
+    "strArtistThumb": "https://images.pexels.com/photos/2102567/pexels-photo-2102567.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "strCountry": "Canada",
+    "intMembers": 1,
+    "strGender": "Male",
+    "strBiographyEN": "The Weeknd is a Canadian singer, songwriter, and producer whose atmospheric R&B and pop crossover hits include Blinding Lights and Starboy.",
+    "strGenre": "R&B, Pop",
+    "intFormedYear": 2010,
+    "intDisbandedYear": null
+  },
+  {
+    "idArtist": 7,
+    "strArtist": "Tame Impala",
+    "strArtistThumb": "https://images.pexels.com/photos/274744/pexels-photo-274744.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "strCountry": "Australia",
+    "intMembers": 1,
+    "strGender": "Solo Project",
+    "strBiographyEN": "Tame Impala is the psychedelic music project of Australian multi‑instrumentalist Kevin Parker, known for lush, dreamy productions and synth‑driven riffs.",
+    "strGenre": "Psychedelic Rock, Indie",
+    "intFormedYear": 2007,
+    "intDisbandedYear": null
+  },
+  {
+    "idArtist": 8,
+    "strArtist": "Adele",
+    "strArtistThumb": "https://images.pexels.com/photos/167636/pexels-photo-167636.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "strCountry": "United Kingdom",
+    "intMembers": 1,
+    "strGender": "Female",
+    "strBiographyEN": "Adele is a British singer‑songwriter whose powerful ballads and soulful voice have made albums like 21 and 25 global best‑sellers.",
+    "strGenre": "Soul, Pop",
+    "intFormedYear": 2006,
+    "intDisbandedYear": null
+  }
+]
+
