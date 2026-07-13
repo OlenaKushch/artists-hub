@@ -13,7 +13,18 @@
 .img-container-about-section {
     border-radius: 16px;
     overflow: hidden;
+    width: 100%;
+    max-width: 640px;
+}
 
+.about-visual {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    background:
+        radial-gradient(ellipse 70% 50% at 30% 40%, rgba(118, 65, 145, 0.5) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 40% at 80% 70%, rgba(60, 30, 80, 0.6) 0%, transparent 60%),
+        linear-gradient(145deg, #2a1835 0%, #120a18 55%, #060307 100%);
 }
 
 .img-container-about-section img,

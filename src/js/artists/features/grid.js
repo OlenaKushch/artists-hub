@@ -2,30 +2,11 @@
 // Грид артистов: скелетоны, пагинация, поиск/сорт/жанры, модалка, zoom, List/Grid view.
 // Плюс: "умная" биография (минимум 3–5 строк), единая высота блоков, data:-плейсхолдер.
 
-import { UISound } from "../lib/sound.js";
 import { fetchArtists, fetchGenres } from "./api.js";
 import { ArtistState } from "./state.js";
-import { createArtistModal } from "./modal.js";
 import { openZoom } from "./zoom.js";
-
-// === SVG SPRITE (лежит в CRC/img/sprite.svg) ===
-import SPRITE_RAW from "../../../img/sprite.svg?raw";
-
-const SPRITE_CONTAINER_ID = "GLOBAL_SVG_SPRITE";
-function ensureSpriteMounted(doc = document) {
-  if (doc.getElementById(SPRITE_CONTAINER_ID)) return;
-  const wrap = doc.createElement("div");
-  wrap.id = SPRITE_CONTAINER_ID;
-  wrap.setAttribute("aria-hidden", "true");
-  wrap.style.position = "absolute";
-  wrap.style.width = "0";
-  wrap.style.height = "0";
-  wrap.style.overflow = "hidden";
-  wrap.innerHTML = SPRITE_RAW;
-  doc.body.prepend(wrap);
-}
-const icon = (id, cls = "ico") =>
-  `<svg class="${cls}" aria-hidden="true"><use href="#${id}" xlink:href="#${id}"></use></svg>`;
+import { escapeHtml } from "../../shared/html.js";
+import { FALLBACK_IMG, ensureSpriteMounted, icon } from "../../shared/media.js";
 
 // === Рантайм-CSS (ровная сетка: 5 строк биографии + фикс высота тегов) ===
 const RUNTIME_STYLE_ID = "artists-grid-runtime";
@@ -47,17 +28,6 @@ function ensureRuntimeStyles() {
 
 // ——— параметры рендеринга ———
 const DEFAULT_LIMIT = 8;
-
-// Без сетевых запросов → не будет ошибок в консоли
-const FALLBACK_IMG =
-  "data:image/svg+xml;utf8," +
-  encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540">
-      <rect width="100%" height="100%" fill="#0b0b0b"/>
-      <text x="50%" y="50%" fill="#888" font-family="IBM Plex Sans,Arial,sans-serif"
-            font-size="28" text-anchor="middle" dominant-baseline="middle">No image</text>
-    </svg>`
-  );
 
 // аккуратно отсекаем «странные» URL, чтобы не гонять лишние запросы
 function looksLikeImageUrl(u) {
@@ -138,8 +108,12 @@ function composeBio(a) {
 
 /* ====================================================================== */
 
-export function initGrid(root = document.querySelector("#artists-section")) {
+export function initGrid(root = document.querySelector("#artists-section"), { openFor } = {}) {
   if (!root) return;
+  if (typeof openFor !== "function") {
+    console.warn("[artists] initGrid requires openFor from initArtists");
+    return;
+  }
 
   ensureSpriteMounted(document);
   ensureRuntimeStyles();
@@ -173,9 +147,6 @@ export function initGrid(root = document.querySelector("#artists-section")) {
 
   const sectionRoot = root.closest(".artists1") || root;
 
-  // модалка (единый экземпляр)
-  const modalApi = createArtistModal(document);
-
   // защита от гонок API
   let reqId = 0;
 
@@ -186,7 +157,6 @@ export function initGrid(root = document.querySelector("#artists-section")) {
   const show = (el) => el && el.removeAttribute("hidden");
   const hide = (el) => el && el.setAttribute("hidden", "");
   const isDesktop = () => matchMedia("(min-width:1440px)").matches;
-  const byName = (a) => (a?.strArtist || a?.name || "").toLowerCase();
   const isListMode = () => sectionRoot.classList.contains("view-list");
 
   function updateViewButtonUI(listOn) {
@@ -294,12 +264,12 @@ export function initGrid(root = document.querySelector("#artists-section")) {
 
   // ---------- rendering ----------
   function buildCard(a) {
-    const id    = a?.id || a?._id || a?.artistId || "";
-    const name  = a?.strArtist || a?.name || "Unknown";
+    const id    = escapeHtml(a?.id || a?._id || a?.artistId || "");
+    const name  = escapeHtml(a?.strArtist || a?.name || "Unknown");
     const rawImg= a?.strArtistThumb || a?.photo || a?.image || "";
-    const img   = looksLikeImageUrl(rawImg) ? rawImg : FALLBACK_IMG;
+    const img   = looksLikeImageUrl(rawImg) ? escapeHtml(rawImg) : FALLBACK_IMG;
 
-    const bio   = composeBio(a);
+    const bio   = escapeHtml(composeBio(a));
     const tags  = Array.isArray(a?.genres) ? a.genres : (a?.genre ? [a.genre] : []);
 
     return `
@@ -310,10 +280,10 @@ export function initGrid(root = document.querySelector("#artists-section")) {
             src="${img}"
             alt="${name}"
             loading="lazy"
-            onerror="this.onerror=null;this.src='${FALLBACK_IMG}'"
+            data-fallback="1"
           >
         </div>
-        <div class="card__tags">${tags.map(t => `<span class="tag">${t}</span>`).join("")}</div>
+        <div class="card__tags">${tags.map(t => `<span class="tag">${escapeHtml(t)}</span>`).join("")}</div>
         <h3 class="card__title">${name}</h3>
         <p class="card__text">${bio}</p>
         <button class="card__link" data-action="more">
@@ -372,7 +342,7 @@ export function initGrid(root = document.querySelector("#artists-section")) {
           </li>`;
       }
       const list = await fetchGenres();
-      if (ddGenreList) ddGenreList.innerHTML = list.map((g) => `<li data-val="${g}">${g}</li>`).join("");
+      if (ddGenreList) ddGenreList.innerHTML = list.map((g) => `<li data-val="${escapeHtml(g)}">${escapeHtml(g)}</li>`).join("");
     } catch {
       if (ddGenreList) ddGenreList.innerHTML = `<li data-val="">All Genres</li>`;
     } finally {
@@ -413,8 +383,7 @@ export function initGrid(root = document.querySelector("#artists-section")) {
     if (page > totalPages && allowRetry) { ArtistState.setPage(totalPages); return loadArtists(false); }
     if (page < 1 && allowRetry)          { ArtistState.setPage(1);         return loadArtists(false); }
 
-    if (sort === "asc")  list = list.slice().sort((a, b) => byName(a).localeCompare(byName(b)));
-    if (sort === "desc") list = list.slice().sort((a, b) => byName(b).localeCompare(byName(a)));
+    // Server already sorts when sortName is set
 
     if (myId !== reqId) return;
 
@@ -451,7 +420,6 @@ export function initGrid(root = document.querySelector("#artists-section")) {
 
   // ---------- UI events ----------
   toggleBtn?.addEventListener("click", () => {
-    try { UISound?.tap?.(); } catch {}
     const st = ArtistState.get();
     ArtistState.setMobilePanel(!st.isMobilePanelOpen);
     syncPanelMode();
@@ -461,13 +429,12 @@ export function initGrid(root = document.querySelector("#artists-section")) {
     if (isListMode()) applyAutoLimitForCurrentMode({ resetPage: true });
   });
 
-  ddSortBtn?.addEventListener("click", () => { try { UISound?.tap?.(); } catch {} toggleDropdown(ddSort); });
-  ddGenreBtn?.addEventListener("click", () => { try { UISound?.tap?.(); } catch {} toggleDropdown(ddGenre); });
+  ddSortBtn?.addEventListener("click", () => { toggleDropdown(ddSort); });
+  ddGenreBtn?.addEventListener("click", () => { toggleDropdown(ddGenre); });
   document.addEventListener("click", (e) => { if (!e.target.closest(".dd")) closeDropdowns(); });
 
   ddSortList?.addEventListener("click", (e) => {
     const li = e.target.closest("li"); if (!li) return;
-    try { UISound?.tap?.(); } catch {}
     ArtistState.setSort(li.dataset.val || "");
     toggleDropdown(ddSort);
     loadArtists();
@@ -475,7 +442,6 @@ export function initGrid(root = document.querySelector("#artists-section")) {
 
   ddGenreList?.addEventListener("click", (e) => {
     const li = e.target.closest("li"); if (!li) return;
-    try { UISound?.tap?.(); } catch {}
     const v = li.dataset.val || "";
     ArtistState.setGenre(v === "All Genres" ? "" : v);
     toggleDropdown(ddGenre);
@@ -484,7 +450,6 @@ export function initGrid(root = document.querySelector("#artists-section")) {
   });
 
   function doSearch() {
-    try { UISound?.tap?.(); } catch {}
     ArtistState.setQuery(searchInput?.value.trim() || "");
     ArtistState.setPage(1);
     loadArtists();
@@ -499,21 +464,19 @@ export function initGrid(root = document.querySelector("#artists-section")) {
     lastAppliedLimit = null;
     applyAutoLimitForCurrentMode({ resetPage: true });
   }
-  resetBtn?.addEventListener("click", () => { try { UISound?.tap?.(); } catch {} resetAll(); });
+  resetBtn?.addEventListener("click", () => { resetAll(); });
   resetBtnSm?.addEventListener("click", () => {
-    try { UISound?.tap?.(); } catch {}
     resetAll();
     ArtistState.setMobilePanel(false);
     syncPanelMode();
   });
-  root.querySelector("#empty-reset")?.addEventListener("click", () => { try { UISound?.tap?.(); } catch {} resetAll(); });
+  root.querySelector("#empty-reset")?.addEventListener("click", () => { resetAll(); });
 
   pager?.addEventListener("click", (e) => {
     const b = e.target.closest("button[data-page]");
     if (!b || b.disabled) return;
     const p = Number(b.dataset.page) || 1;
     if (p === ArtistState.get().page) return;
-    try { UISound?.page?.(); } catch {}
     scrollToGridTop();
     ArtistState.setPage(p);
     loadArtists();
@@ -525,13 +488,11 @@ export function initGrid(root = document.querySelector("#artists-section")) {
     if (btn) {
       const id = btn.closest(".card")?.dataset?.id;
       if (!id) return;
-      try { UISound?.tap?.(); } catch {}
-      modalApi.openFor(id);
+      openFor(id);
       return;
     }
     const img = e.target.closest(".card__media img");
     if (img) {
-      try { UISound?.tap?.(); } catch {}
       const src = img.currentSrc || img.src || img.getAttribute("src") || "";
       openZoom(src, img.getAttribute("alt") || "");
     }
@@ -539,7 +500,6 @@ export function initGrid(root = document.querySelector("#artists-section")) {
 
   // List/Grid view
   viewToggle?.addEventListener("click", () => {
-    try { UISound?.tap?.(); } catch {}
     const listOn = !isListMode();
     sectionRoot.classList.toggle("view-list", listOn);
     sectionRoot.classList.toggle("view-grid", !listOn);

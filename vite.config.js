@@ -2,11 +2,11 @@ import { defineConfig } from 'vite';
 import { glob } from 'glob';
 import injectHTML from 'vite-plugin-html-inject';
 import FullReload from 'vite-plugin-full-reload';
-import SortCss from 'postcss-sort-media-queries';
+import sortMediaQueries from 'postcss-sort-media-queries';
 
 export default defineConfig(({ command }) => {
   return {
-    // Относительные пути для ассетов — одинаково хорошо работают на GitHub Pages и Vercel
+    // Relative asset paths — works on GitHub Pages and Vercel
     base: './',
     define: {
       [command === 'serve' ? 'global' : '_global']: {},
@@ -42,10 +42,14 @@ export default defineConfig(({ command }) => {
     plugins: [
       injectHTML(),
       FullReload(['./src/**/**.html']),
-      SortCss({
-        sort: 'mobile-first',
-      }),
     ],
+    css: {
+      postcss: {
+        plugins: [
+          sortMediaQueries({ sort: 'mobile-first' }),
+        ],
+      },
+    },
     server: {
       proxy: {
         '/api': {

@@ -1,4 +1,6 @@
 // src/js/artists/features/player.js
+import { getYouTubeId } from "../../shared/youtube.js";
+
 let _instance = null;
 
 /* -------------------- YT API -------------------- */
@@ -17,17 +19,6 @@ function loadYTAPI() {
 }
 
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-function getYouTubeId(urlOrId) {
-  if (!urlOrId) return "";
-  if (/^[\w-]{11}$/.test(urlOrId)) return urlOrId;
-  try {
-    const u = new URL(urlOrId, location.href);
-    if (/youtu\.be$/.test(u.hostname)) return u.pathname.slice(1);
-    if (u.searchParams.get("v")) return u.searchParams.get("v");
-    const m = u.pathname.match(/\/(embed|shorts|v)\/([^/?#]+)/);
-    return m ? m[2] : "";
-  } catch { return ""; }
-}
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const shuffleArr = (arr) => {
   const a = arr.slice();
