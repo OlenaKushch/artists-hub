@@ -9,26 +9,11 @@ import { initArtists } from "./features/init.js";
 import { createMiniPlayer } from "./features/player.js";
 import mountPlayerPatch from "./features/player-patch.js";
 import { installMixRadioMenu } from "./features/mixradio-menu.js";
+import { getYouTubeId } from "../shared/youtube.js";
 
 /* =========================
    Утилиты
    ========================= */
-
-/** Достаёт YouTube ID из ID или URL (youtu.be, /embed, /shorts, ?v=) */
-function getYouTubeId(urlOrId) {
-  if (!urlOrId) return "";
-  if (/^[\w-]{11}$/.test(urlOrId)) return urlOrId; // уже ID
-
-  try {
-    const u = new URL(urlOrId, location.href);
-    if (/youtu\.be$/i.test(u.hostname)) return u.pathname.slice(1);
-    const v = u.searchParams.get("v");
-    if (v && /^[\w-]{11}$/.test(v)) return v;
-    const m = u.pathname.match(/\/(?:embed|v|shorts)\/([^/?#]+)/i);
-    if (m && m[1] && /^[\w-]{11}$/.test(m[1])) return m[1];
-  } catch {/* ignore */}
-  return "";
-}
 
 const uniq = (arr) => Array.from(new Set((arr || []).filter(Boolean)));
 function shuffle(a) {
@@ -50,7 +35,7 @@ const SEED_IDS = uniq([
   "2Vv-BfVoq4g","kXYiU_JCYtU","UceaB4D0jpo","RubBzkZzpUA","kJQP7kiw5Fk",
   "CevxZvSJLk8","pRpeEdMmmQ0","IcrbM1l_BoI","YVkUvmDQ3HY","hT_nvWreIhg",
   "09R8_2nJtjg","uelHwf8o7_U","JGwWNGJdvx8","YQHsXMglC9A","NmugSMBh_iI",
-  "LrUvu1mlWco","hLQl3WQQоQ0","RgKAFK5djSk","SlPhMPnQ58k","oRdxUFDoQe0",
+  "LrUvu1mlWco","hLQl3WQQoQ0","RgKAFK5djSk","SlPhMPnQ58k","oRdxUFDoQe0",
   "Pkh8UtuejGw","tt2k8PGm-TI","lY2yjAdbvdQ","pXRviuL6vMY","nfs8NYg7yQM",
   "nCkpzqqog4k","M7lc1UVf-VE",
   // расширение

@@ -2,7 +2,7 @@
 // Фиксы: ни одного passive-listener там, где вызывается preventDefault,
 // + корректное перетаскивание пузыря без "залипания".
 
-export default function mountPlayerPatch(player) {
+export default function mountPlayerPatch(_player) {
   // Базовые элементы
   const dock = document.querySelector(".am-player");
   if (!dock) return;
@@ -67,10 +67,8 @@ export default function mountPlayerPatch(player) {
     const dy = p.y - startY;
 
     const target = bubble || dock;
-    const w = target.offsetWidth || 0;
-    const h = target.offsetHeight || 0;
 
-    // позиционируем как fixed-элемент (центрируем по точке)
+    // позиционируем как fixed-элемент
     target.style.position = "fixed";
     target.style.left = `${Math.round(baseLeft + dx)}px`;
     target.style.top  = `${Math.round(baseTop  + dy)}px`;

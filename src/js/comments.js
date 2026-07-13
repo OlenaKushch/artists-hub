@@ -4,6 +4,7 @@ import 'swiper/swiper-bundle.css';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 import fallbackFeedbacks from '../data/feedbacks.json';
+import { escapeHtml } from './shared/html.js';
 
 // ===== Constants / State =====
 const STORAGE_KEY = 'myFeedback';
@@ -204,8 +205,8 @@ async function loadReviews() {
     slide.innerHTML = `
       <div class="rating my-rating" id="rating-${index}" data-rating="${stars}"></div>
       <div class="feedback">
-        <p class="customer-feedback">${fb.descr}</p>
-        <h3 class="customer-name">${fb.name}</h3>
+        <p class="customer-feedback">${escapeHtml(fb.descr)}</p>
+        <h3 class="customer-name">${escapeHtml(fb.name)}</h3>
       </div>
     `;
 
@@ -251,9 +252,8 @@ function attachSubmitHandler() {
 
 // ===== Artists Button Smooth Scroll =====
 function initArtistsButton() {
-  // Всі посилання до #artists
-  const artistsLinks = document.querySelectorAll('a[href="#artists"]');
-  const artistsSection = document.querySelector('#artists');
+  const artistsLinks = document.querySelectorAll('a[href="#artists-section"], a[href="#artists"]');
+  const artistsSection = document.querySelector('#artists-section');
 
   if (artistsLinks.length && artistsSection) {
     artistsLinks.forEach(link => {

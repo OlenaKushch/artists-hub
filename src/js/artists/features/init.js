@@ -6,15 +6,13 @@ import { initPrefetch } from "./prefetch.js";
 export function initArtists(root = document.querySelector("#artists-section")) {
   if (!root) return;
 
-  // URL-sync сначала (восстановит состояние до начальной загрузки)
-  initRouter(root);
+  // URL-sync first (restores state before initial load)
+  initRouter();
 
-  // Модалка (возвращает open/close)
-  const modal = createArtistModal(root);
+  // Single modal instance owned here
+  const modal = createArtistModal(document);
 
-  // Prefetch "Learn more" (ускоряет открытие модалки)
   initPrefetch(root);
 
-  // Грид (передаём модалку для открытия)
-  initGrid(root, { openModal: modal.open });
+  initGrid(root, { openFor: (id) => modal.openFor(id) });
 }
